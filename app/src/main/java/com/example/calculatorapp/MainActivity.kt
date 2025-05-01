@@ -63,8 +63,8 @@ fun CalculatorLayout(modifier: Modifier = Modifier) {
             listOf("7", "8", "9", "/"),
             listOf("4", "5", "6", "*"),
             listOf("1", "2", "3", "-"),
-            listOf("0", ".", "=", "+"),
-            listOf("Clear")
+            listOf("0", ".", "(", "+"),
+            listOf("Clear", "√", ")", "=")
         )
 
         buttons.forEach { row ->
@@ -77,9 +77,16 @@ fun CalculatorLayout(modifier: Modifier = Modifier) {
                         onClick = {
                             input = when (label) {
                                 "=" -> try {
-                                    eval(input).toString()
-                                } catch (e: Exception) { "Error" }
+                                    val result = eval(input)
+                                    if (result.isNaN()) "Invalid input" else result.toString()
+                                } catch (e: Exception) {
+                                    "Error"
+                                }
+
                                 "Clear" -> ""
+
+                                "√" -> input + "sqrt("
+
                                 else -> input + label
                             }
                         },
