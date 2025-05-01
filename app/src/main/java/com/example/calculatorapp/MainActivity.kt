@@ -39,6 +39,7 @@ fun eval(expression: String): Double {
 fun CalculatorLayout(modifier: Modifier = Modifier) {
 
     var input by remember {mutableStateOf("")}
+    val history = remember { mutableStateListOf<String>() }
 
     Column(
         modifier = modifier
@@ -48,6 +49,21 @@ fun CalculatorLayout(modifier: Modifier = Modifier) {
     ) {
         val backgroundColor = MaterialTheme.colorScheme.surface
         val textColor = MaterialTheme.colorScheme.onSurface
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
+        ) {
+            history.reversed().forEach { entry ->
+                Text(
+                    text = entry,
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(vertical = 2.dp)
+                )
+            }
+        }
 
         Text(
             text = input,
@@ -79,7 +95,12 @@ fun CalculatorLayout(modifier: Modifier = Modifier) {
                             input = when (label) {
                                 "=" -> try {
                                     val result = eval(input)
-                                    if (result.isNaN()) "Invalid input" else result.toString()
+                                    if (result.isNaN()) {
+                                        "Invalid input"
+                                    } else {
+                                        history.add("$input = $result")
+                                        result.toString()
+                                    }
                                 } catch (e: Exception) {
                                     "Error"
                                 }
