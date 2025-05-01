@@ -63,8 +63,9 @@ fun CalculatorLayout(modifier: Modifier = Modifier) {
             listOf("7", "8", "9", "/"),
             listOf("4", "5", "6", "*"),
             listOf("1", "2", "3", "-"),
-            listOf("0", ".", "(", "+"),
-            listOf("Clear", "√", ")", "=")
+            listOf("0", ".", "x²", "+"),
+            listOf("√", "(", ")", "="),
+            listOf("Clear")
         )
 
         buttons.forEach { row ->
@@ -86,6 +87,7 @@ fun CalculatorLayout(modifier: Modifier = Modifier) {
                                 "Clear" -> ""
 
                                 "√" -> input + "sqrt("
+                                "x²" -> input + "^2"
 
                                 else -> input + label
                             }
