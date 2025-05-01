@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,7 +16,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.objecthunter.exp4j.ExpressionBuilder
@@ -27,13 +26,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            CalculatorAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CalculatorLayout(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            CalculatorDarkLightTheme()
         }
     }
 }
@@ -53,12 +46,16 @@ fun CalculatorLayout(modifier: Modifier = Modifier) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        val backgroundColor = MaterialTheme.colorScheme.surface
+        val textColor = MaterialTheme.colorScheme.onSurface
+
         Text(
             text = input,
             fontSize = 32.sp,
+            color = textColor,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.LightGray)
+                .background(backgroundColor)
                 .padding(12.dp)
         )
 
@@ -95,7 +92,48 @@ fun CalculatorLayout(modifier: Modifier = Modifier) {
         }
     }
 }
+@Composable
+fun CalculatorDarkLightTheme() {
+    var isDarkTheme by remember { mutableStateOf(false) }
 
+    val colorScheme = if (isDarkTheme) darkColorScheme() else lightColorScheme()
+
+    MaterialTheme(colorScheme = colorScheme) {
+        val backgroundColor = MaterialTheme.colorScheme.background
+
+        Surface(
+            color = backgroundColor,
+            modifier = Modifier.fillMaxSize()
+        ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                ) {
+                    // Theme Toggle
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            "Dark Mode", modifier = Modifier
+                                .padding(end = 8.dp)
+
+                        )
+                        Switch(
+                            checked = isDarkTheme,
+                            onCheckedChange = { isDarkTheme = it },
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(200.dp))
+                    CalculatorLayout()
+                }
+            }
+        }
+    }
 @Preview(showBackground = true)
 @Composable
 fun CalculatorPreview() {
